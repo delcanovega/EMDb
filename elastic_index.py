@@ -1,4 +1,4 @@
-# This script indexes out MongoDB collection
+# This script indexes our MongoDB collection
 # with the ElasticSearch engine in order to
 # perform more optimal searches
 
