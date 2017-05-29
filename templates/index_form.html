@@ -1,13 +1,53 @@
+<!DOCTYPE html>
 <html>
     <head><title>EMDb</title>
         <script src="{{url_for('static', filename='jquery-3.2.1.min.js')}}"></script>
+        <!--<script>
+            $(function searching() {
+                console.log("llamada2")
+                $.getJSON($SCRIPT_ROOT + '/search', {
+                    s: $('input[name="q"]').val()
+                }, function(data) {
+                    console.log(data)
+                    $("#result").text(data.result[0]);
+                });
+                return false;
+            });
+        </script> -->
+        <script>
+            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        </script>
+        <script>
+            $(function() {
+                $('#searchbutton').bind('click', function() {
+                    console.log("llamada por boton");
+                    $.getJSON($SCRIPT_ROOT + '/search', {
+                        s: $('input[name="q"]').val()
+                    }, function(data) {
+                        console.log(data)
+                        var array = data.result;
+                        console.log(array);
+                        var len = data.len;
+                        console.log(len);
+
+                        var str = "";
+                        for (var i = 0; i < len && i < 3; i++) {
+                            str = str + array[i] + "\r\n";
+                        }
+                        htmlstring = str.replace(/(\r\n|\n|\r)/gm, "<br>");
+                        $("#result").html(htmlstring);
+                    });
+                    return false;
+                });
+            });
+        </script>
     </head>
 
     <body>
         <div id="searchContainer">
             <form id="searchForm">
                 EMDb Search Engine<br>
-                <input id="searchbox" name="q" type="text"/>
+                <input id="searchbox" name="q" oninput="searching()" type="text"/>
                 <button id="searchbutton" type="submit" value="search"/>GO!</button>
             </form>
         </div>
