@@ -4,11 +4,8 @@ var search = function () {
     $.getJSON($SCRIPT_ROOT + '/search', {
         s: $('input[name="q"]').val()
     }, function (data) {
-        console.log(data)
         var array = data.result;
-        console.log(array);
         var len = data.len;
-        console.log(len);
 
         var str = "";
         for (var i = 0; i < len && i < 3; i++) {
