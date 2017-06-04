@@ -11,12 +11,13 @@ def index():
 @app.route("/search")
 def search():
     s = request.args.get('s')
-    query = {"query" : { "fuzzy" : { "_all" : { "value" : s }}}}
+    query = {"query" : { "fuzzy" : { "_all" : { "value" : s }}} }
     response = es.search(index="emdb", body=query)
     h = 0
     results = {}
     for hit in response['hits']['hits']:
-        results[h] = hit['_score'], hit['_source']['Title']
+        results[h] = "With a " + str(hit['_score']) + " score: " + hit['_source']['Title']
+        #results[h] += "Match highlight: " + hit['_highlight']
         h = h + 1
     return jsonify(result=results, len=len(results))
 
