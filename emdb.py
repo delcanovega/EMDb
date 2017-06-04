@@ -12,15 +12,13 @@ def index():
 def search():
     s = request.args.get('s')
 
-    #query = {"query" : { "match" : { "_all" :  s }}, "highlight" : { "fields" : { "_all" :  {}}} }
-    #query = {"query" : { "match" : { "Plot" :  s}}, "highlight" : { "fields" : { "Plot" :  {}}} }
     q = { "query": {
             "bool": {
               "should": [
                 { "match": { 
                     "Title":  {
                     "query": s,
-                    "boost": 2,
+                    "boost": 3,
                     "fuzziness": 1
                 }}},
                 { "match": { 
@@ -38,7 +36,7 @@ def search():
                 { "match": { 
                     "Cast":  {
                     "query": s,
-                    "boost": 2,
+                    "boost": 1,
                     "fuzziness": 1
                 }}},
               ]
@@ -58,9 +56,9 @@ def search():
     h = 0
     results = {}
     for hit in response['hits']['hits']:
-        results[h] = "With a " + str(hit['_score']) + " score: " + hit['_source']['Title'] + "\n"
-        print hit['highlight']
-        results[h] += "\tMatch highlight: .." + str(hit['highlight']) + "..\n\n"
+        results[h] = "\nWith a " + str(hit['_score']) + " score: " + hit['_source']['Title'] + "\n"
+        for j in hit['highlight']:
+            results[h] += " * Match highlight in " + j + ": " + hit['highlight'].get(j)[0] + "\n"
         h = h + 1
     return jsonify(result=results, len=len(results))
     
